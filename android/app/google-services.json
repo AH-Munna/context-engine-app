@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "631698295135",
+    "firebase_url": "https://appzilla-31c1c-default-rtdb.firebaseio.com",
+    "project_id": "appzilla-31c1c",
+    "storage_bucket": "appzilla-31c1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631698295135:android:29eb68bd0772558d024eea",
+        "android_client_info": {
+          "package_name": "com.seeyoulater.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631698295135-l7373pdi88anekg71vt2etg8iqhns5sl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkQ1269lmpeLM5NKhr5yWDkYfu2YWNPHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631698295135-l7373pdi88anekg71vt2etg8iqhns5sl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "631698295135-0ass85dl4mfd1p345phja4lt2vmj40fk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.seeyoulater.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "ContextEngine",
+  "displayName": "Context Engine",
+  "expo": {
+    "name": "Context Engine",
+    "slug": "context-engine",
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.contextengine.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "Context Engine"
+      }
+    },
+    "android": {
+      "package": "com.contextengine.app",
+      "versionCode": 1,
+      "label": "Context Engine"
+    }
+  }
+}
+
