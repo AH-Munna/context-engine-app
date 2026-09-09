@@ -60,6 +60,9 @@ pnpm-debug.log*
 
 # Bundle artifact
 *.jsbundle
+*.bundle
+android/app/src/main/assets/index.android.bundle
+
 
 # Android build artifacts
 *.apk
