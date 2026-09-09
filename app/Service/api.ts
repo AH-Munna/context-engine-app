@@ -4,13 +4,13 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthTokens} from '../types';
+import {ENV} from '../config/env';
+import {AuthTokens, TokenResponse} from '../types';
 
-// Configurable API base URL (can be updated with .env or remote config)
-export const DEFAULT_API_BASE_URL = 'http://localhost:8000';
-export const API_BASE_URL = DEFAULT_API_BASE_URL;
+export const API_BASE_URL = ENV.API_BASE_URL;
 
 const TOKEN_KEY = '@context_engine_auth_tokens';
+const ACCOUNT_TYPE_KEY = '@context_engine_account_type';
 
 let cachedTokens: AuthTokens | null = null;
 
@@ -28,10 +28,14 @@ export const getTokens = async (): Promise<AuthTokens | null> => {
   return null;
 };
 
-export const setTokens = async (tokens: AuthTokens): Promise<void> => {
-  cachedTokens = tokens;
+export const setTokens = async (tokens: AuthTokens | TokenResponse): Promise<void> => {
+  const normalized: AuthTokens = {
+    accessToken: 'access_token' in tokens ? tokens.access_token : tokens.accessToken,
+    refreshToken: 'refresh_token' in tokens ? tokens.refresh_token : tokens.refreshToken,
+  };
+  cachedTokens = normalized;
   try {
-    await AsyncStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
+    await AsyncStorage.setItem(TOKEN_KEY, JSON.stringify(normalized));
   } catch (err) {
     console.warn('[API] Error saving auth tokens', err);
   }
@@ -46,9 +50,53 @@ export const clearTokens = async (): Promise<void> => {
   }
 };
 
+export const getStoredAccountType = async (userId?: string): Promise<string | null> => {
+  try {
+    const key = userId ? `${ACCOUNT_TYPE_KEY}_${userId}` : ACCOUNT_TYPE_KEY;
+    return await AsyncStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+export const setStoredAccountType = async (userId: string, type: string): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(`${ACCOUNT_TYPE_KEY}_${userId}`, type);
+    await AsyncStorage.setItem(ACCOUNT_TYPE_KEY, type);
+  } catch {}
+};
+
+export const clearStoredAccountType = async (userId?: string): Promise<void> => {
+  try {
+    if (userId) {
+      await AsyncStorage.removeItem(`${ACCOUNT_TYPE_KEY}_${userId}`);
+    }
+    await AsyncStorage.removeItem(ACCOUNT_TYPE_KEY);
+  } catch {}
+};
+
+/**
+ * Parses and formats FastAPI backend error responses
+ */
+export function formatApiError(error: any): string {
+  if (error.response?.data?.detail) {
+    const detail = error.response.data.detail;
+    if (typeof detail === 'string') {
+      return detail;
+    }
+    if (Array.isArray(detail)) {
+      return detail.map((item: any) => item.msg || JSON.stringify(item)).join(', ');
+    }
+  }
+  if (error.message) {
+    return error.message;
+  }
+  return 'An unexpected network error occurred. Please try again.';
+}
+
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: ENV.API_TIMEOUT_MS,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

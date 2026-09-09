@@ -4,8 +4,19 @@ import {useTheme} from '@react-navigation/native';
 import {Platform, StatusBar, View} from 'react-native';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {RootStackParamList} from './RootStackParamList';
+import {useAppSelector} from '../hooks/useRedux';
 
-// Starter screens
+// Auth Screens
+import LoginScreen from '../Screens/Auth/LoginScreen';
+import RegisterScreen from '../Screens/Auth/RegisterScreen';
+import ForgotPasswordScreen from '../Screens/Auth/ForgotPasswordScreen';
+
+// Onboarding Screens
+import ChooseAccountTypeScreen from '../Screens/Onboarding/ChooseAccountTypeScreen';
+import CreatorOnboardingScreen from '../Screens/Onboarding/CreatorOnboardingScreen';
+import OrganizationOnboardingScreen from '../Screens/Onboarding/OrganizationOnboardingScreen';
+
+// Main application screens
 import HomeScreen from '../Screens/Home';
 import ComponentsScreen from '../Screens/components';
 
@@ -44,6 +55,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const StackNavigator = () => {
   const theme = useTheme();
+  const {isAuthenticated, isOnboarded, isInitialized} = useAppSelector(
+    state => state.app
+  );
 
   React.useEffect(() => {
     if (Platform.OS === 'android') {
@@ -56,6 +70,13 @@ const StackNavigator = () => {
       } catch {}
     }
   }, [theme.dark, theme.colors.background]);
+
+  // Determine initial route based on authentication and onboarding state
+  const initialRouteName: keyof RootStackParamList = !isAuthenticated
+    ? 'Login'
+    : !isOnboarded
+    ? 'ChooseAccountType'
+    : 'Home';
 
   return (
     <View
@@ -70,10 +91,21 @@ const StackNavigator = () => {
         translucent={Platform.OS === 'android' ? false : undefined}
       />
       <Stack.Navigator
-        initialRouteName={'Home'}
+        key={`${isAuthenticated}-${isOnboarded}`}
+        initialRouteName={initialRouteName}
         screenOptions={{
           headerShown: false,
         }}>
+        {/* Auth Stack */}
+        <Stack.Screen name={'Login'} component={LoginScreen} />
+        <Stack.Screen name={'Register'} component={RegisterScreen} />
+        <Stack.Screen name={'ForgotPassword'} component={ForgotPasswordScreen} />
+
+        {/* Onboarding Stack */}
+        <Stack.Screen name={'ChooseAccountType'} component={ChooseAccountTypeScreen} />
+        <Stack.Screen name={'CreatorOnboarding'} component={CreatorOnboardingScreen} />
+        <Stack.Screen name={'OrgOnboarding'} component={OrganizationOnboardingScreen} />
+
         {/* Main Application Screen */}
         <Stack.Screen name={'Home'} component={HomeScreen} />
 

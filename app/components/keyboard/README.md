@@ -1,6 +1,6 @@
 # Keyboard handling patterns
 
-SeeYouLater centralizes keyboard layout in `useKeyboardInsets` and the components under `app/components/keyboard/`.
+Context Engine centralizes keyboard layout in `useKeyboardInsets` and the components under `app/components/keyboard/`.
 
 ## When to use what
 
@@ -10,7 +10,6 @@ Use on **full-screen forms and pages** with one or more text fields.
 
 - Set `keyboardShouldPersistTaps="handled"` so taps on buttons and pickers work while the keyboard is open.
 - For multi-field screens, enable **`enableFieldScroll`** and wrap each focusable field in **`KeyboardField`** with `useKeyboardFieldFocus`.
-- Pattern reference: `app/pages/Plan/AddRecommendation.tsx`, `app/pages/Profile/EditProfile.tsx`.
 
 ### `KeyboardSafeFooter`
 
@@ -18,14 +17,12 @@ Use when a **fixed footer** (primary action bar) must sit above the keyboard on 
 
 - The footer owns the bottom safe-area inset: leave `bottom` out of the host screen's `SafeAreaView` edges or the footer floats above the navigation bar.
 - Edge-to-edge windows (enforced from Android 15) are not resized by `adjustResize`, so `useKeyboardInsets` lifts the footer by the keyboard height plus the bottom inset there. Legacy Android windows still resize and get no offset.
-- Pattern reference: chat composer and other sticky footers.
 
 ### `KeyboardBottomSheet`
 
-Use for **modals / bottom sheets that contain `TextInput`** (search, legal text, profile edit, country picker).
+Use for **modals / bottom sheets that contain `TextInput`** (search, forms, country picker).
 
 - Wraps `BottomSheet` + `useKeyboardInsets` + `getKeyboardModalLayout()`.
-- Pattern reference: `EulaModal`, `CountryPhoneInput`, `UserProfile` edit sheet.
 
 ### Stepped pickers in profile edit
 

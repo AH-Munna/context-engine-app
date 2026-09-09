@@ -139,9 +139,8 @@ const Header = (props: any) => {
                     },
                     props.bgImage && {color: COLORS.white},
                   ]}>
-                  See
-                  <Text style={{color: COLORS.coral}}>You</Text>
-                  Later
+                  Context{' '}
+                  <Text style={{color: COLORS.primary}}>Engine</Text>
                 </Text>
               </View>
             ) : (
@@ -157,7 +156,7 @@ const Header = (props: any) => {
             )}
             {props.rightIcon2 === 'pages' && (
               <TouchableOpacity
-                onPress={() => navigation.navigate('pages')}
+                onPress={() => props.onPressPages && props.onPressPages()}
                 style={{
                   height: 45,
                   width: 45,
@@ -205,7 +204,13 @@ const Header = (props: any) => {
                 accessible={true}
                 accessibilityLabel="Notifications"
                 accessibilityHint="show notifications"
-                onPress={() => navigation.navigate('Notification')}
+                onPress={() => {
+                  if (props.onPressNotification) {
+                    props.onPressNotification();
+                  } else {
+                    navigation.navigate('Notifications');
+                  }
+                }}
                 style={{
                   height: 45,
                   width: 45,
@@ -236,7 +241,13 @@ const Header = (props: any) => {
             )}
             {props.rightIcon === 'settings' && (
               <TouchableOpacity
-                onPress={() => navigation.navigate('Settings')}
+                onPress={() => {
+                  if (props.onPressSettings) {
+                    props.onPressSettings();
+                  } else {
+                    navigation.navigate('Settings');
+                  }
+                }}
                 style={{
                   height: 45,
                   width: 45,

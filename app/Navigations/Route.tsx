@@ -11,28 +11,38 @@ import StackNavigator from './StackNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import themeContext from '../constants/themeContext';
 import {COLORS} from '../constants/theme';
+import {useAppDispatch, useAppSelector} from '../hooks/useRedux';
+import {restoreSessionThunk} from '../Redux/slices/appSlice';
 
 export const navigationRef = createNavigationContainerRef();
 
 const THEME_KEY = '@context_engine_theme_preference'; // 'light' | 'dark' | 'system'
 
 const Routes = () => {
+  const dispatch = useAppDispatch();
+  const isInitialized = useAppSelector(state => state.app.isInitialized);
+
   const [themePref, setThemePref] = useState<'system' | 'light' | 'dark'>('system');
   const [systemScheme, setSystemScheme] = useState(
     Appearance.getColorScheme() || 'light',
   );
-  const [ready, setReady] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
 
-  // Load persisted preference on mount
+  // Restore authentication session & tokens on startup
+  useEffect(() => {
+    dispatch(restoreSessionThunk());
+  }, [dispatch]);
+
+  // Load persisted theme preference on mount
   useEffect(() => {
     AsyncStorage.getItem(THEME_KEY)
       .then(val => {
         if (val === 'light' || val === 'dark' || val === 'system') {
           setThemePref(val);
         }
-        setReady(true);
+        setThemeReady(true);
       })
-      .catch(() => setReady(true));
+      .catch(() => setThemeReady(true));
   }, []);
 
   // Listen for system theme changes
@@ -106,7 +116,7 @@ const Routes = () => {
 
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-  if (!ready) {
+  if (!themeReady || !isInitialized) {
     return null;
   }
 

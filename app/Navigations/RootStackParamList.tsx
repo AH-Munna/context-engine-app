@@ -1,4 +1,13 @@
 export type RootStackParamList = {
+  // Auth & Onboarding
+  Login: undefined;
+  Register: undefined;
+  ForgotPassword: undefined;
+  ChooseAccountType: undefined;
+  CreatorOnboarding: undefined;
+  OrgOnboarding: {initialName?: string} | undefined;
+
+  // Main App
   Home: undefined;
   Components: undefined;
 
