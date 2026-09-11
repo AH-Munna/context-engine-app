@@ -130,9 +130,9 @@ const Header = (props: any) => {
                   style={[
                     {
                       flexShrink: 1,
-                      fontFamily: 'Poppins-Bold',
+                      ...FONTS.fontBold,
                       fontSize: 20,
-                      color: theme.dark ? '#fff' : COLORS.darkTeal,
+                      color: theme.dark ? '#fff' : COLORS.title,
                       letterSpacing: 0.4,
                       includeFontPadding: false,
                       textAlignVertical: 'center',

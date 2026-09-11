@@ -112,7 +112,7 @@ const LoginScreen = () => {
           
           {/* Brand Logo & Header */}
           <View style={styles.headerBlock}>
-            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : '#EDF2FF'}]}>
+            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
               <Image source={IMAGES.logo} style={styles.logoImage} resizeMode="contain" />
             </View>
             <Text style={[styles.title, {color: colors.title}]}>Sign In</Text>

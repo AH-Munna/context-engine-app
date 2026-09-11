@@ -45,7 +45,7 @@ const AccordionHighlight = (props:any) => {
                 backgroundColor: isActive ? COLORS.primary : COLORS.primayLight,
             }}>
                 {/* <FontAwesome style={{marginRight:10}} name={item.icon} size={15} color={isActive ? COLORS.white : colors.title}/> */}
-                <Text style={[FONTS.font,{color:isActive ? COLORS.white : colors.title,flex:1,fontSize:15,fontFamily:'NunitoSans-SemiBold'}]}>{item.title}</Text>
+                <Text style={[FONTS.font,{color:isActive ? COLORS.white : colors.title,flex:1,fontSize:15,fontWeight:'600'}]}>{item.title}</Text>
                 <FontAwesome name={isActive ? 'angle-up' : 'angle-down'} size={20} color={isActive ? COLORS.white : colors.title}/>
             </View>
         )

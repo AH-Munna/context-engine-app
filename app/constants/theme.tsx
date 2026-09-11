@@ -7,59 +7,59 @@ const {width, height} = Dimensions.get('screen');
    ============================================================ */
 
 export const COLORS = {
-  // Context Engine Brand — Primary Palette
-  primary: '#3B5BDB', // Vivid Indigo/Blue (brand primary)
-  primaryDark: '#2B44B4', // Deep Indigo
-  primaryLight: '#EDF2FF', // Soft Indigo tint
-  primayLight: 'rgba(59, 91, 219, 0.08)', // Indigo tint (alias)
-  primayLight2: 'rgba(59, 91, 219, 0.14)',
-  primayLight3: 'rgba(12, 166, 120, 0.12)',
-  primayLight4: 'rgba(245, 158, 11, 0.15)',
-  primayLight5: 'rgba(59, 91, 219, 0.20)',
+  // Context Engine Brand — Primary Palette (synced with web portal)
+  primary: '#0069D4', // Vivid Brand Blue (oklch 52% 0.20 248)
+  primaryDark: '#0049B2', // Deep Blue
+  primaryLight: '#D8E7F5', // Soft Blue tint (oklch 92% 0.025 248)
+  primayLight: 'rgba(0, 105, 212, 0.08)', // Blue tint (alias)
+  primayLight2: 'rgba(0, 105, 212, 0.14)',
+  primayLight3: 'rgba(0, 154, 134, 0.12)', // Secondary teal tint
+  primayLight4: 'rgba(225, 155, 52, 0.15)', // Warning amber tint
+  primayLight5: 'rgba(0, 105, 212, 0.20)',
 
   // Supporting / Legacy Aliases for Component Library compatibility
-  primary2: '#0CA678', // Vibrant Teal
-  primary3: '#FA5252', // Danger Red
-  primary4: '#F59E0B', // Warning Amber
-  primary5: '#3B82F6', // Info Blue
-  primary6: '#3B5BDB', // Vivid Indigo
-  primary7: '#0CA678', // Vibrant Teal
+  primary2: '#009A86', // Vibrant Teal
+  primary3: '#CF4047', // Danger Red
+  primary4: '#E19B34', // Warning Amber
+  primary5: '#008DC1', // Info Blue
+  primary6: '#0069D4', // Brand Blue
+  primary7: '#009A86', // Vibrant Teal
 
-  // Secondary — Vibrant Teal
-  secondary: '#0CA678',
-  secondaryDark: '#099268',
-  secondaryLight: '#E6FCF5',
+  // Secondary — Vibrant Teal (oklch 60% 0.14 182)
+  secondary: '#009A86',
+  secondaryDark: '#007B69',
+  secondaryLight: '#D7EEE9',
 
-  // Semantic Feedback Colors
-  success: '#10B981', // Emerald Green
-  danger: '#EF4444', // Red
-  warning: '#F59E0B', // Amber / Orange
-  info: '#3B82F6', // Blue
-  yellow: '#F59E0B',
-  red: '#EF4444',
-  coral: '#FA5252',
-  teal: '#0CA678',
-  brightYellow: '#F59E0B',
-  darkTeal: '#1E293B',
+  // Semantic Feedback Colors (synced with web portal)
+  success: '#43963C', // Green
+  danger: '#CF4047', // Red
+  warning: '#E19B34', // Amber / Orange
+  info: '#008DC1', // Blue
+  yellow: '#E19B34',
+  red: '#CF4047',
+  coral: '#CF4047',
+  teal: '#009A86',
+  brightYellow: '#E19B34',
+  darkTeal: '#0F172A',
 
-  // Surfaces & Neutrals (Light Mode defaults)
+  // Surfaces & Neutrals (Light Mode defaults synced with web portal)
   white: '#FFFFFF',
   text: '#0F172A', // Slate 900
-  textLight: '#64748B', // Slate 500
-  title: '#0F172A', // Slate 900
+  textLight: '#474E53', // Web text-secondary (oklch 42% 0.012 240)
+  title: '#030609', // Web text-primary (oklch 12% 0.012 240)
   dark: '#0F172A',
-  light: '#F8FAFC', // Slate 50
-  offWhite: '#F8FAFC',
-  appBg: '#F8FAFC',
-  borderColor: '#E2E8F0', // Slate 200
+  light: '#FAFCFE', // Web background (oklch 99% 0.003 240)
+  offWhite: '#FAFCFE',
+  appBg: '#FAFCFE',
+  borderColor: '#D1D9DF', // Web border-color (oklch 88% 0.012 240)
   darkBorder: 'rgba(255, 255, 255, 0.12)',
   darkBg: '#0B0F19', // Deep dark slate
   placeholderColor: '#94A3B8', // Slate 400
-  redLight: 'rgba(239, 68, 68, 0.15)',
+  redLight: 'rgba(207, 64, 71, 0.15)',
 
   // Theme Helpers
-  themePrimary: '#3B5BDB',
-  themeSecondary: '#0CA678',
+  themePrimary: '#0069D4',
+  themeSecondary: '#009A86',
 };
 
 export const SIZES = {
@@ -112,20 +112,30 @@ export function getThemedBorder(
 
 /** Subtle row divider */
 export function getThemedDivider(isDark: boolean) {
-  return isDark ? 'rgba(255, 255, 255, 0.08)' : '#E2E8F0';
+  return isDark ? 'rgba(255, 255, 255, 0.08)' : '#D1D9DF';
 }
 
+const INTER_FAMILY =
+  Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght';
+
 export const FONTS = {
-  fontOutfit: {fontFamily: 'Outfit-SemiBold'},
-  fontOutfitMedium: {fontFamily: 'Outfit-Medium'},
-  fontInter: {
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+  fontOutfit: {
+    fontFamily: INTER_FAMILY,
+    fontWeight: '600' as const,
   },
-  fontPoppins: {fontFamily: 'Outfit-SemiBold'},
+  fontOutfitMedium: {
+    fontFamily: INTER_FAMILY,
+    fontWeight: '500' as const,
+  },
+  fontInter: {
+    fontFamily: INTER_FAMILY,
+  },
+  fontPoppins: {
+    fontFamily: INTER_FAMILY,
+    fontWeight: '600' as const,
+  },
   fontNunito: {
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
   },
 
   // Body text
@@ -133,58 +143,96 @@ export const FONTS = {
     fontSize: SIZES.fontLg,
     color: COLORS.text,
     lineHeight: 24,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
     fontWeight: '700' as const,
   },
   font: {
     fontSize: SIZES.font,
     color: COLORS.text,
     lineHeight: 20,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
     fontWeight: '400' as const,
   },
   fontSm: {
     fontSize: SIZES.fontSm,
     color: COLORS.textLight,
     lineHeight: 16,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
   },
   fontXs: {
     fontSize: SIZES.fontXs,
     color: COLORS.textLight,
     lineHeight: 14,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
   },
 
-  // Headings
-  h1: {fontSize: SIZES.h1, color: COLORS.title, fontFamily: 'Outfit-SemiBold'},
-  h2: {fontSize: SIZES.h2, color: COLORS.title, fontFamily: 'Outfit-SemiBold'},
-  h3: {fontSize: SIZES.h3, color: COLORS.title, fontFamily: 'Outfit-Medium'},
-  h4: {fontSize: SIZES.h4, color: COLORS.title, fontFamily: 'Outfit-SemiBold'},
-  h5: {fontSize: SIZES.h5, color: COLORS.title, fontFamily: 'Outfit-SemiBold'},
-  h6: {fontSize: SIZES.h6, color: COLORS.title, fontFamily: 'Outfit-SemiBold'},
+  // Headings (synced with web portal: Inter Bold, tracking-tight)
+  h1: {
+    fontSize: SIZES.h1,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+    letterSpacing: -0.5,
+  },
+  h2: {
+    fontSize: SIZES.h2,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+    letterSpacing: -0.4,
+  },
+  h3: {
+    fontSize: SIZES.h3,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+    letterSpacing: -0.3,
+  },
+  h4: {
+    fontSize: SIZES.h4,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+    letterSpacing: -0.2,
+  },
+  h5: {
+    fontSize: SIZES.h5,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+  },
+  h6: {
+    fontSize: SIZES.h6,
+    color: COLORS.title,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '700' as const,
+  },
 
-  // Buttons & Controls
-  button: {fontSize: 16, fontFamily: 'Outfit-SemiBold', letterSpacing: 0.2},
-  buttonSm: {fontSize: 14, fontFamily: 'Outfit-SemiBold', letterSpacing: 0.2},
+  // Buttons & Controls (synced with web portal: Inter Semibold)
+  button: {
+    fontSize: 16,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '600' as const,
+    letterSpacing: 0.2,
+  },
+  buttonSm: {
+    fontSize: 14,
+    fontFamily: INTER_FAMILY,
+    fontWeight: '600' as const,
+    letterSpacing: 0.2,
+  },
 
   // Inputs
   input: {
     fontSize: 15,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
     fontWeight: '400' as const,
     lineHeight: 20,
     color: COLORS.text,
   },
 
   fontBold: {
-    fontFamily:
-      Platform.OS === 'ios' ? 'Inter' : 'Inter-VariableFont_opsz_wght',
+    fontFamily: INTER_FAMILY,
     fontWeight: '700' as const,
   },
 };
@@ -192,8 +240,8 @@ export const FONTS = {
 export const ICONS = {
   user: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   lock: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 12C4.44772 12 4 12.4477 4 13V20C4 20.5523 4.44772 21 5 21H19C19.5523 21 20 20.5523 20 20V13C20 12.4477 19.5523 12 19 12H5ZM2 13C2 11.3431 3.34315 10 5 10H19C20.6569 10 22 11.3431 22 13V20C22 21.6569 20.6569 23 19 23H5C3.34315 23 2 21.6569 2 20V13Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C10.9391 3 9.92172 3.42143 9.17157 4.17157C8.42143 4.92172 8 5.93913 8 7V11C8 11.5523 7.55228 12 7 12C6.44772 12 6 11.5523 6 11V7C6 5.4087 6.63214 3.88258 7.75736 2.75736C8.88258 1.63214 10.4087 1 12 1C13.5913 1 15.1174 1.63214 16.2426 2.75736C17.3679 3.88258 18 5.4087 18 7V11C18 11.5523 17.5523 12 17 12C16.4477 12 16 11.5523 16 11V7C16 5.93913 15.5786 4.92172 14.8284 4.17157C14.0783 3.42143 13.0609 3 12 3Z" fill="currentColor"/></svg>`,
-  eyeOpen: `<svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.8475 7.43335C23.6331 7.1411 18.5245 0.277466 11.9999 0.277466C5.47529 0.277466 0.366469 7.1411 0.152297 7.43307C-0.0507657 7.71032 -0.0507657 8.08637 0.152297 8.36362C0.366469 8.65587 5.47529 15.5195 11.9999 15.5195C18.5245 15.5195 23.6331 8.65582 23.8475 8.36386C24.0508 8.08665 24.0508 7.71032 23.8475 7.43335Z" fill="#3B5BDB"/></svg>`,
-  eyeClose: `<svg width="24" height="21" viewBox="0 0 24 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.8475 10.4333C23.6331 10.1411 18.5245 3.27747 11.9999 3.27747C5.47529 3.27747 0.366469 10.1411 0.152297 10.4331C-0.0507657 10.7103 -0.0507657 11.0864 0.152297 11.3636C0.366469 11.6559 5.47529 18.5195 11.9999 18.5195C18.5245 18.5195 23.6331 11.6558 23.8475 11.3639C24.0508 11.0866 24.0508 10.7103 23.8475 10.4333Z" fill="#3B5BDB"/></svg>`,
+  eyeOpen: `<svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.8475 7.43335C23.6331 7.1411 18.5245 0.277466 11.9999 0.277466C5.47529 0.277466 0.366469 7.1411 0.152297 7.43307C-0.0507657 7.71032 -0.0507657 8.08637 0.152297 8.36362C0.366469 8.65587 5.47529 15.5195 11.9999 15.5195C18.5245 15.5195 23.6331 8.65582 23.8475 8.36386C24.0508 8.08665 24.0508 7.71032 23.8475 7.43335Z" fill="#0069D4"/></svg>`,
+  eyeClose: `<svg width="24" height="21" viewBox="0 0 24 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.8475 10.4333C23.6331 10.1411 18.5245 3.27747 11.9999 3.27747C5.47529 3.27747 0.366469 10.1411 0.152297 10.4331C-0.0507657 10.7103 -0.0507657 11.0864 0.152297 11.3636C0.366469 11.6559 5.47529 18.5195 11.9999 18.5195C18.5245 18.5195 23.6331 11.6558 23.8475 11.3639C24.0508 11.0866 24.0508 10.7103 23.8475 10.4333Z" fill="#0069D4"/></svg>`,
   email: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   back: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.88463 9L11.5 2.5L9 -1.13412e-07L1.12188e-06 9L9 18L11.5 15.5L4.88463 9Z" fill="currentColor"/></svg>`,
   home: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"><path d="M21.44 11.035a.75.75 0 0 1-.69.465H18.5V19a2.25 2.25 0 0 1-2.25 2.25h-3a.75.75 0 0 1-.75-.75V16a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75v4.5a.75.75 0 0 1-.75.75h-3A2.25 2.25 0 0 1 3.5 19v-7.5H1.25a.75.75 0 0 1-.69-.465.75.75 0 0 1 .158-.818l9.75-9.75A.75.75 0 0 1 11 .246a.75.75 0 0 1 .533.222l9.75 9.75a.75.75 0 0 1 .158.818z" fill="currentColor"/></svg>`,

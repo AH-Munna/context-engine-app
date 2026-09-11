@@ -72,7 +72,7 @@ const ForgotPasswordScreen = () => {
           keyboardShouldPersistTaps="handled">
           
           <View style={styles.headerBlock}>
-            <View style={[styles.iconWrap, {backgroundColor: theme.dark ? '#182234' : '#EDF2FF'}]}>
+            <View style={[styles.iconWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
               <FeatherIcon name="key" size={28} color={COLORS.primary} />
             </View>
             <Text style={[styles.title, {color: colors.title}]}>Reset Password</Text>

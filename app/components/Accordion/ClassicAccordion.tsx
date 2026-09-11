@@ -47,9 +47,7 @@ const ClassicAccordion = (props:any) => {
                 {/* <FontAwesome style={{marginRight:10}} name={item.icon} size={15} color={item.color}/> */}
                 <Text 
                     style={[FONTS.font,
-                        {color:colors.title,fontSize:15,flex:1
-                            ,fontFamily:'NunitoSans-SemiBold',
-                        }
+                        {color:colors.title,fontSize:15,flex:1,fontWeight:'600'}
                     ,isActive && {
                     }]}
                 >{item.title}</Text>

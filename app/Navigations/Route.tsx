@@ -82,7 +82,7 @@ const Routes = () => {
       textLight: COLORS.textLight,
       title: COLORS.title,
       background: COLORS.light,
-      background2: '#F1F5F9',
+      background2: '#EBEFF2',
       backgroundColor: COLORS.white,
       card: COLORS.white,
       cardBg: COLORS.white,
@@ -109,7 +109,7 @@ const Routes = () => {
       borderColor: 'rgba(255, 255, 255, 0.10)',
       border: 'rgba(255, 255, 255, 0.10)',
       themeBg: '#0B0F19',
-      primayLight: 'rgba(59, 91, 219, 0.16)',
+      primayLight: 'rgba(0, 105, 212, 0.20)',
       bgGradient: ['#0B0F19', '#0B0F19'],
     },
   };

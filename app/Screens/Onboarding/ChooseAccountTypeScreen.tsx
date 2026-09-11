@@ -33,8 +33,8 @@ const ACCOUNT_OPTIONS: AccountOption[] = [
       'Upload video analysis, track scores, build your portfolio, and showcase your work in the marketplace for brands to discover.',
     iconName: 'video',
     tag: 'Content Creator',
-    color: '#0CA678', // Vibrant Teal
-    bgTint: 'rgba(12, 166, 120, 0.08)',
+    color: COLORS.secondary, // Web Teal #009A86
+    bgTint: 'rgba(0, 154, 134, 0.08)',
   },
   {
     type: 'organization',
@@ -43,8 +43,8 @@ const ACCOUNT_OPTIONS: AccountOption[] = [
       'Analyze campaign videos, set target audiences, manage brand profiles, and hire creators for your campaigns.',
     iconName: 'briefcase',
     tag: 'Brand / Agency',
-    color: '#3B5BDB', // Brand Indigo
-    bgTint: 'rgba(59, 91, 219, 0.08)',
+    color: COLORS.primary, // Web Blue #0069D4
+    bgTint: 'rgba(0, 105, 212, 0.08)',
   },
 ];
 

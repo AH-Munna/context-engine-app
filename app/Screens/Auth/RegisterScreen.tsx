@@ -141,7 +141,7 @@ const RegisterScreen = () => {
           
           {/* Header */}
           <View style={styles.headerBlock}>
-            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : '#EDF2FF'}]}>
+            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
               <Image source={IMAGES.logo} style={styles.logoImage} resizeMode="contain" />
             </View>
             <Text style={[styles.title, {color: colors.title}]}>Create Account</Text>
@@ -157,7 +157,7 @@ const RegisterScreen = () => {
                 styles.accountTypeOption,
                 accountType === 'creator' && [
                   styles.accountTypeOptionActive,
-                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : '#EDF2FF'},
+                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : COLORS.primaryLight},
                 ],
               ]}
               onPress={() => setAccountType('creator')}
@@ -181,7 +181,7 @@ const RegisterScreen = () => {
                 styles.accountTypeOption,
                 accountType === 'organization' && [
                   styles.accountTypeOptionActive,
-                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : '#EDF2FF'},
+                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : COLORS.primaryLight},
                 ],
               ]}
               onPress={() => setAccountType('organization')}

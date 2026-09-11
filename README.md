@@ -8,9 +8,10 @@ React Native starter application for **Context Engine**, built with TypeScript, 
 
 - **Clean Starter Architecture**: Minimal, clutter-free starting screen with brand theme integration.
 - **Design System Tokens**: Tailored colors and typography aligned with Context Engine web platform:
-  - Primary: `#3B5BDB` (Indigo/Blue)
-  - Secondary: `#0CA678` (Teal)
-  - Neutral / Surfaces: Slate-50 (`#F8FAFC`), Slate-900 (`#0F172A`), Dark Surface (`#0B0F19`)
+  - Primary: `#0069D4` (Context Engine Blue)
+  - Secondary: `#009A86` (Teal)
+  - Typography: 100% Inter font family
+  - Neutral / Surfaces: Slate light (`#FAFCFE`), Slate-900 (`#030609`), Dark Surface (`#0B0F19`)
 - **Extensive UI Component Library**: 25+ production-ready, reusable UI components and showcases accessible directly from the starter screen (Buttons, Cards, Modals, Pickers, Bottom Sheets, Accordions, Tabs, Charts, and more).
 - **Decoupled State & Services**: Clean Redux Toolkit store and lightweight Axios HTTP service client.
 - **Modern Package Management**: Full `pnpm` workspace support (`node-linker=hoisted`).

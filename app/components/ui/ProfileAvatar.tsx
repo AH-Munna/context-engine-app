@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Image, Text, View, type ImageSourcePropType} from 'react-native';
+import {COLORS} from '../../constants/theme';
 
 type Props = {
   name: string;
@@ -59,7 +60,7 @@ const ProfileAvatar = ({name, profileImage, image, size = 44}: Props) => {
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: '#3B5BDB',
+        backgroundColor: COLORS.primary,
         alignItems: 'center',
         justifyContent: 'center',
       }}>
