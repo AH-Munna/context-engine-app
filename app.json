@@ -5,6 +5,12 @@
     "name": "Context Engine",
     "slug": "context-engine",
     "version": "1.0.0",
+    "icon": "./app/assets/images/global/appIcon.png",
+    "splash": {
+      "image": "./app/assets/images/global/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "bundleIdentifier": "com.contextengine.app",
       "buildNumber": "1",
@@ -15,7 +21,11 @@
     "android": {
       "package": "com.contextengine.app",
       "versionCode": 1,
-      "label": "Context Engine"
+      "label": "Context Engine",
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/logo/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
+        "backgroundColor": "#fafafa"
+      }
     }
   }
 }
