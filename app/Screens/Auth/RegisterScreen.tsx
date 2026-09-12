@@ -96,6 +96,7 @@ const RegisterScreen = () => {
           accountType,
           creator: null,
           organization: null,
+          isOnboarded: false,
         })
       );
 

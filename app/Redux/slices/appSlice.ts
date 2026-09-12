@@ -13,6 +13,13 @@ import {
   clearTokens,
   clearStoredAccountType,
 } from '../../Service/api';
+import {
+  getStoredOrgOnboardingComplete,
+  setStoredOrgOnboardingComplete,
+  clearStoredOrgOnboardingComplete,
+  isOrgOnboardingComplete,
+  hasOrganizationCompletedOnboarding,
+} from '../../utils/accountType';
 
 export interface AppState {
   isInitialized: boolean;
@@ -64,13 +71,19 @@ export const restoreSessionThunk = createAsyncThunk(
         organization = await authService.getOrganizationProfile();
       } catch {}
 
+      const storedOrgComplete = await getStoredOrgOnboardingComplete(user.id);
+      const isOrgComplete = isOrgOnboardingComplete(user.id, organization, storedOrgComplete);
+      if (hasOrganizationCompletedOnboarding(organization)) {
+        await setStoredOrgOnboardingComplete(user.id);
+      }
+
       const effectiveAccountType: AccountType | null = organization
         ? 'organization'
         : creator
         ? 'creator'
         : storedAccountType;
 
-      const isOnboarded = !!creator || !!organization;
+      const isOnboarded = !!creator || isOrgComplete;
 
       return {
         user,
@@ -96,6 +109,9 @@ export const appSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setOnboarded: (state, action: PayloadAction<boolean>) => {
+      state.isOnboarded = action.payload;
+    },
     setAccountType: (state, action: PayloadAction<AccountType | null>) => {
       state.accountType = action.payload;
       if (state.user && action.payload) {
@@ -109,15 +125,16 @@ export const appSlice = createSlice({
     setCreator: (state, action: PayloadAction<CreatorProfile | null>) => {
       state.creator = action.payload;
       if (action.payload) {
-        state.isOnboarded = true;
         state.accountType = 'creator';
       }
     },
     setOrganization: (state, action: PayloadAction<OrganizationProfile | null>) => {
       state.organization = action.payload;
       if (action.payload) {
-        state.isOnboarded = true;
         state.accountType = 'organization';
+        if (hasOrganizationCompletedOnboarding(action.payload)) {
+          state.isOnboarded = true;
+        }
       }
     },
     setAuthSuccess: (
@@ -127,6 +144,7 @@ export const appSlice = createSlice({
         creator?: CreatorProfile | null;
         organization?: OrganizationProfile | null;
         accountType?: AccountType | null;
+        isOnboarded?: boolean;
       }>
     ) => {
       state.user = action.payload.user;
@@ -136,11 +154,17 @@ export const appSlice = createSlice({
         action.payload.accountType ||
         (action.payload.organization ? 'organization' : action.payload.creator ? 'creator' : null);
       state.isAuthenticated = true;
-      state.isOnboarded = !!action.payload.creator || !!action.payload.organization;
+      state.isOnboarded =
+        action.payload.isOnboarded !== undefined
+          ? action.payload.isOnboarded
+          : !!action.payload.creator || hasOrganizationCompletedOnboarding(action.payload.organization);
       state.isLoading = false;
       state.error = null;
     },
     logout: state => {
+      if (state.user) {
+        clearStoredOrgOnboardingComplete(state.user.id);
+      }
       state.user = null;
       state.creator = null;
       state.organization = null;
@@ -186,6 +210,7 @@ export const appSlice = createSlice({
 export const {
   setLoading,
   setError,
+  setOnboarded,
   setAccountType,
   setUser,
   setCreator,

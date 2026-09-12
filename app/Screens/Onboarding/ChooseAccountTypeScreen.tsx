@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,7 +13,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import {COLORS, FONTS} from '../../constants/theme';
 import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
 import {setAccountType} from '../../Redux/slices/appSlice';
-import {AccountType} from '../../types';
+import {AccountType, OrganizationInvite} from '../../types';
+import {authService} from '../../Service/authService';
 
 interface AccountOption {
   type: AccountType;
@@ -58,6 +59,23 @@ const ChooseAccountTypeScreen = () => {
   const [selectedType, setSelectedType] = useState<AccountType>(
     currentAccountType || 'creator'
   );
+  const [pendingInvites, setPendingInvites] = useState<OrganizationInvite[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadInvites() {
+      try {
+        const invites = await authService.getPendingInvites();
+        if (active) {
+          setPendingInvites(invites);
+        }
+      } catch {}
+    }
+    loadInvites();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleContinue = () => {
     dispatch(setAccountType(selectedType));
@@ -68,6 +86,10 @@ const ChooseAccountTypeScreen = () => {
       navigation.navigate('OrgOnboarding');
     }
   };
+
+  const inviteOrgNames = pendingInvites
+    .map(inv => inv.organization_name)
+    .filter(Boolean) as string[];
 
   return (
     <SafeAreaView style={[styles.safeArea, {backgroundColor: colors.background}]}>
@@ -94,6 +116,23 @@ const ChooseAccountTypeScreen = () => {
             Select your account type to personalize your experience. You can manage both creator content and brand campaigns.
           </Text>
         </View>
+
+        {/* Pending Invites Banner */}
+        {inviteOrgNames.length > 0 && (
+          <View style={styles.inviteBanner}>
+            <View style={styles.inviteIconCircle}>
+              <FeatherIcon name="mail" size={18} color={COLORS.primary} />
+            </View>
+            <View style={styles.inviteContent}>
+              <Text style={styles.inviteTitle}>You have a pending team invite</Text>
+              <Text style={[styles.inviteText, {color: colors.textLight}]}>
+                {inviteOrgNames.length === 1
+                  ? `${inviteOrgNames[0]} invited you to join their organization. Choose Creator to accept after onboarding, or create your own organization instead.`
+                  : `You were invited to join ${inviteOrgNames.join(', ')}. Choose Creator to accept after onboarding, or create your own organization instead.`}
+              </Text>
+            </View>
+          </View>
+        )}
 
         {/* Options */}
         <View style={styles.optionsList}>
@@ -301,6 +340,38 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+  inviteBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(0, 105, 212, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 105, 212, 0.25)',
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 20,
+    gap: 12,
+  },
+  inviteIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 105, 212, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inviteContent: {
+    flex: 1,
+  },
+  inviteTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: COLORS.primary,
+    marginBottom: 4,
+  },
+  inviteText: {
+    fontSize: 12,
+    lineHeight: 17,
   },
 });
 

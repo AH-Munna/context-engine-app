@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,8 +14,9 @@ import {
 import {useTheme, useNavigation, useRoute} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {COLORS, FONTS} from '../../constants/theme';
-import {useAppDispatch} from '../../hooks/useRedux';
-import {setOrganization} from '../../Redux/slices/appSlice';
+import {useAppDispatch, useAppSelector} from '../../hooks/useRedux';
+import {setOrganization, setOnboarded} from '../../Redux/slices/appSlice';
+import {setStoredOrgOnboardingComplete} from '../../utils/accountType';
 import {authService} from '../../Service/authService';
 import {OrganizationType} from '../../types';
 
@@ -112,17 +113,19 @@ const OrganizationOnboardingScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.app.user);
+  const existingOrg = useAppSelector(state => state.app.organization);
 
-  const initialName = route.params?.initialName || '';
+  const initialName = route.params?.initialName || existingOrg?.name || user?.full_name || '';
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [orgType, setOrgType] = useState<OrganizationType>('brand');
-  const [name, setName] = useState(initialName);
-  const [slug, setSlug] = useState(slugify(initialName));
-  const [industry, setIndustry] = useState(INDUSTRIES[0]);
-  const [country, setCountry] = useState(COUNTRIES[0]);
-  const [timezone, setTimezone] = useState(TIMEZONES[0]);
-  const [website, setWebsite] = useState('');
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(existingOrg ? 3 : 1);
+  const [orgType, setOrgType] = useState<OrganizationType>(existingOrg?.type || 'brand');
+  const [name, setName] = useState(existingOrg?.name || initialName);
+  const [slug, setSlug] = useState(existingOrg?.slug || slugify(initialName));
+  const [industry, setIndustry] = useState(existingOrg?.industry || INDUSTRIES[0]);
+  const [country, setCountry] = useState(existingOrg?.country || COUNTRIES[0]);
+  const [timezone, setTimezone] = useState(existingOrg?.timezone || TIMEZONES[0]);
+  const [website, setWebsite] = useState(existingOrg?.website || '');
 
   // Team invites
   const [inviteEmailInput, setInviteEmailInput] = useState('');
@@ -175,11 +178,6 @@ const OrganizationOnboardingScreen = () => {
         setErrorMessage('Slug identifier is required.');
         return;
       }
-      setStep(3);
-      return;
-    }
-
-    if (step === 3) {
       setLoading(true);
       try {
         const orgProfile = await authService.completeOrganizationOnboarding({
@@ -190,10 +188,34 @@ const OrganizationOnboardingScreen = () => {
           country,
           timezone,
           website: website.trim() || undefined,
-          invitedEmails,
         });
 
         dispatch(setOrganization(orgProfile));
+        setStep(3);
+      } catch (err: any) {
+        setErrorMessage(err.message || 'Failed to save organization details.');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (step === 3) {
+      setLoading(true);
+      try {
+        for (const email of invitedEmails) {
+          try {
+            await authService.sendOrganizationInvite(email);
+          } catch (inviteErr) {
+            console.warn('[Onboarding] Failed to send invite to:', email, inviteErr);
+          }
+        }
+
+        const orgProfile = await authService.finishOrganizationOnboarding();
+        dispatch(setOrganization(orgProfile));
+        if (user) {
+          await setStoredOrgOnboardingComplete(user.id);
+        }
         setStep(4);
       } catch (err: any) {
         setErrorMessage(err.message || 'Failed to complete organization setup.');
@@ -203,7 +225,21 @@ const OrganizationOnboardingScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (step === 4) {
+      dispatch(setOnboarded(true));
+      const timer = setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [step, navigation, dispatch]);
+
   const handleFinish = () => {
+    dispatch(setOnboarded(true));
     navigation.reset({
       index: 0,
       routes: [{name: 'Home'}],

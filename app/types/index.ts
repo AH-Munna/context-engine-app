@@ -18,6 +18,8 @@ export interface UserProfile {
 
 export type AccountType = 'creator' | 'organization';
 
+export const ORG_ONBOARDING_COMPLETED_AT_KEY = 'onboarding_completed_at';
+
 export interface TokenResponse {
   access_token: string;
   refresh_token: string;

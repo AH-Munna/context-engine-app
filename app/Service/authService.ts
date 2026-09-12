@@ -7,6 +7,7 @@ import {
   CreatorOnboardingPayload,
   TokenResponse,
   RegisterFormInputs,
+  OrganizationInvite,
 } from '../types';
 
 export const authService = {
@@ -156,6 +157,49 @@ export const authService = {
       return response.data;
     } catch (err: any) {
       throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * Finalize organization onboarding by calling /organizations/onboarding/complete
+   * This sets metadata_json[onboarding_completed_at] on the backend.
+   */
+  async finishOrganizationOnboarding(): Promise<OrganizationProfile> {
+    try {
+      const response = await api.post<OrganizationProfile>(
+        '/organizations/onboarding/complete',
+        {},
+      );
+      return response.data;
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * Send an organization team invite by email
+   */
+  async sendOrganizationInvite(email: string): Promise<OrganizationInvite> {
+    try {
+      const response = await api.post<OrganizationInvite>('/organizations/me/invites', {
+        email: email.trim(),
+      });
+      return response.data;
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * Fetch current user's pending invites from other organizations
+   */
+  async getPendingInvites(): Promise<OrganizationInvite[]> {
+    try {
+      const response = await api.get<OrganizationInvite[]>('/organization-invites/me/pending');
+      return response.data || [];
+    } catch (err: any) {
+      // 404 or empty is non-fatal
+      return [];
     }
   },
 

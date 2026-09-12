@@ -14,3 +14,11 @@ jest.mock('react-native-vector-icons/MaterialIcons', () => 'MaterialIcon');
 jest.mock('react-native-vector-icons/MaterialCommunityIcons', () => 'MaterialCommunityIcon');
 jest.mock('react-native-vector-icons/FontAwesome', () => 'FontAwesome');
 jest.mock('react-native-vector-icons/FontAwesome5', () => 'FontAwesome5');
+
+jest.mock('react-native-snackbar', () => ({
+  show: jest.fn(),
+  dismiss: jest.fn(),
+  LENGTH_SHORT: 1,
+  LENGTH_LONG: 2,
+  LENGTH_INDEFINITE: 3,
+}));

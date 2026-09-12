@@ -111,12 +111,95 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   return config;
 });
 
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (cb: (token: string) => void) => {
+  refreshSubscribers.push(cb);
+};
+
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach(cb => cb(token));
+  refreshSubscribers = [];
+};
+
+const onRefreshFailed = () => {
+  refreshSubscribers = [];
+};
+
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async error => {
-    if (error.response?.status === 401) {
-      await clearTokens();
+    const originalRequest = error.config;
+
+    // Check if error is 401 and request is eligible for refresh
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/auth/login') &&
+      !originalRequest.url?.includes('/auth/refresh')
+    ) {
+      const tokens = await getTokens();
+      if (!tokens?.refreshToken) {
+        await clearTokens();
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          subscribeTokenRefresh((newToken: string) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            }
+            resolve(api(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const refreshResponse = await axios.post(
+          `${API_BASE_URL}/auth/refresh`,
+          {refresh_token: tokens.refreshToken},
+          {
+            headers: {'Content-Type': 'application/json'},
+            timeout: ENV.API_TIMEOUT_MS,
+          },
+        );
+
+        if (refreshResponse.data?.access_token) {
+          const newAccessToken = refreshResponse.data.access_token;
+          const newRefreshToken = refreshResponse.data.refresh_token || tokens.refreshToken;
+
+          await setTokens({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          });
+
+          onRefreshed(newAccessToken);
+
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          }
+
+          return api(originalRequest);
+        } else {
+          await clearTokens();
+          onRefreshFailed();
+          return Promise.reject(error);
+        }
+      } catch (refreshErr) {
+        await clearTokens();
+        onRefreshFailed();
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   },
 );

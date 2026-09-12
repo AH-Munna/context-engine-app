@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,7 +14,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {COLORS, FONTS} from '../../constants/theme';
 import {useAppDispatch} from '../../hooks/useRedux';
-import {setCreator} from '../../Redux/slices/appSlice';
+import {setCreator, setOnboarded} from '../../Redux/slices/appSlice';
 import {authService} from '../../Service/authService';
 
 const NICHES = [
@@ -126,7 +126,21 @@ const CreatorOnboardingScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (step === 4) {
+      dispatch(setOnboarded(true));
+      const timer = setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [step, navigation, dispatch]);
+
   const handleFinish = () => {
+    dispatch(setOnboarded(true));
     navigation.reset({
       index: 0,
       routes: [{name: 'Home'}],

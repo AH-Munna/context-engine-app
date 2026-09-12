@@ -22,6 +22,14 @@ import {authService} from '../../Service/authService';
 import {getStoredAccountType} from '../../Service/api';
 import {AccountType} from '../../types';
 
+import {
+  getStoredOrgOnboardingComplete,
+  setStoredOrgOnboardingComplete,
+  isOrgOnboardingComplete,
+  hasOrganizationCompletedOnboarding,
+  resolvePostAuthRoute,
+} from '../../utils/accountType';
+
 const LoginScreen = () => {
   const theme = useTheme();
   const {colors}: {colors: any} = theme;
@@ -56,14 +64,21 @@ const LoginScreen = () => {
       // 4. Fetch Organization Profile (if exists)
       const organization = await authService.getOrganizationProfile();
 
-      // 5. Check stored account type
+      // 5. Check stored account type & org completion status
       const storedAccountType = (await getStoredAccountType(user.id)) as AccountType | null;
+      const storedOrgComplete = await getStoredOrgOnboardingComplete(user.id);
+      const isOrgComplete = isOrgOnboardingComplete(user.id, organization, storedOrgComplete);
+      if (hasOrganizationCompletedOnboarding(organization)) {
+        await setStoredOrgOnboardingComplete(user.id);
+      }
 
       const effectiveAccountType: AccountType | null = organization
         ? 'organization'
         : creator
         ? 'creator'
         : storedAccountType;
+
+      const isOnboarded = !!creator || isOrgComplete;
 
       // Update Redux state
       dispatch(
@@ -72,21 +87,21 @@ const LoginScreen = () => {
           creator,
           organization,
           accountType: effectiveAccountType,
+          isOnboarded,
         })
       );
 
-      // If neither creator nor organization profile is set, navigate to choose account type
-      if (!creator && !organization) {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'ChooseAccountType'}],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        });
-      }
+      // Determine target destination matching web resolvePostAuthPath
+      const targetRoute = resolvePostAuthRoute({
+        accountType: effectiveAccountType,
+        hasCreatorProfile: !!creator,
+        hasCompletedOrgOnboarding: isOrgComplete,
+      });
+
+      navigation.reset({
+        index: 0,
+        routes: [{name: targetRoute}],
+      });
     } catch (err: any) {
       setErrorMessage(
         err.message || 'Incorrect email or password. Please try again.'

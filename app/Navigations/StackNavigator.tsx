@@ -51,11 +51,13 @@ import Toggles from '../Screens/Components/Toggles';
 import SystemPage from '../Screens/Components/SystemPack/Index';
 import SwipeableScreen from '../Screens/Components/Swipeable';
 
+import {resolvePostAuthRoute} from '../utils/accountType';
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const StackNavigator = () => {
   const theme = useTheme();
-  const {isAuthenticated, isOnboarded, isInitialized} = useAppSelector(
+  const {isAuthenticated, isOnboarded, accountType, creator} = useAppSelector(
     state => state.app
   );
 
@@ -71,12 +73,14 @@ const StackNavigator = () => {
     }
   }, [theme.dark, theme.colors.background]);
 
-  // Determine initial route based on authentication and onboarding state
+  // Determine initial route based on authentication, accountType and onboarding state
   const initialRouteName: keyof RootStackParamList = !isAuthenticated
     ? 'Login'
-    : !isOnboarded
-    ? 'ChooseAccountType'
-    : 'Home';
+    : resolvePostAuthRoute({
+        accountType,
+        hasCreatorProfile: !!creator,
+        hasCompletedOrgOnboarding: isOnboarded,
+      });
 
   return (
     <View
@@ -91,7 +95,7 @@ const StackNavigator = () => {
         translucent={Platform.OS === 'android' ? false : undefined}
       />
       <Stack.Navigator
-        key={`${isAuthenticated}-${isOnboarded}`}
+        key={isAuthenticated ? 'auth-session' : 'guest-session'}
         initialRouteName={initialRouteName}
         screenOptions={{
           headerShown: false,
