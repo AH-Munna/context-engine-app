@@ -1,25 +1,20 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  StatusBar,
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {COLORS, FONTS, SIZES} from '../constants/theme';
-import themeContext from '../constants/themeContext';
-import {useAppDispatch, useAppSelector} from '../hooks/useRedux';
-import {logout} from '../Redux/slices/appSlice';
+import {COLORS} from '../constants/theme';
+import {useAppSelector} from '../hooks/useRedux';
+import DashboardLayout from '../layout/DashboardLayout';
+import ProfileAvatar from '../components/ui/ProfileAvatar';
 
 const Home = ({navigation}: any) => {
   const theme = useTheme();
   const {colors}: {colors: any} = theme;
-  const {setDarkTheme, setLightTheme} = useContext(themeContext);
-  const dispatch = useAppDispatch();
 
   const user = useAppSelector(state => state.app.user);
   const creator = useAppSelector(state => state.app.creator);
@@ -29,78 +24,68 @@ const Home = ({navigation}: any) => {
   const displayName =
     user?.full_name || user?.email?.split('@')[0] || 'User';
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Login'}],
-    });
-  };
-
   return (
-    <SafeAreaView
-      style={[styles.safeArea, {backgroundColor: colors.background}]}>
-      <StatusBar
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-        backgroundColor={colors.background}
-      />
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}>
-        
-        {/* Top Header Row */}
-        <View style={styles.headerRow}>
-          <View>
-            <Text style={[styles.brandTitle, {color: colors.title}]}>
-              Context Engine
-            </Text>
-            <Text style={[styles.brandSubtitle, {color: colors.textLight}]}>
-              Mobile Workspace
-            </Text>
+    <DashboardLayout
+      activeTab="home"
+      showBanners={true}
+      scrollable={true}>
+      <View style={styles.contentContainer}>
+        {/* Welcome Hero Banner */}
+        <View
+          style={[
+            styles.heroCard,
+            {
+              backgroundColor: colors.card,
+              borderColor: colors.borderColor,
+            },
+          ]}>
+          <View style={styles.badgeWrap}>
+            <View style={styles.badge}>
+              <FeatherIcon name="check-circle" size={13} color="#10B981" />
+              <Text style={styles.badgeText}>Context Engine Workspace</Text>
+            </View>
           </View>
 
-          <View style={styles.headerActions}>
-            {/* Theme Toggle Button */}
-            <TouchableOpacity
-              style={[
-                styles.iconBtn,
-                {
-                  backgroundColor: colors.card,
-                  borderColor: colors.borderColor,
-                },
-              ]}
-              onPress={() => {
-                if (theme.dark) {
-                  setLightTheme();
-                } else {
-                  setDarkTheme();
-                }
-              }}
-              activeOpacity={0.8}>
-              <FeatherIcon
-                name={theme.dark ? 'sun' : 'moon'}
-                size={18}
-                color={theme.dark ? '#F59E0B' : COLORS.primary}
-              />
-            </TouchableOpacity>
+          <Text style={[styles.heroHeading, {color: colors.title}]}>
+            Where creators and brands build together.
+          </Text>
 
-            {/* Logout Button */}
-            <TouchableOpacity
+          <Text style={[styles.heroBody, {color: colors.textLight}]}>
+            Upload videos, extract context, discover creators, and run campaigns seamlessly across mobile and web.
+          </Text>
+
+          {/* Quick Stats Grid */}
+          <View style={styles.statsRow}>
+            <View
               style={[
-                styles.iconBtn,
-                {
-                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                  borderColor: 'rgba(239, 68, 68, 0.2)',
-                },
-              ]}
-              onPress={handleLogout}
-              activeOpacity={0.8}>
-              <FeatherIcon name="log-out" size={18} color="#EF4444" />
-            </TouchableOpacity>
+                styles.statBox,
+                {backgroundColor: theme.dark ? '#111827' : '#F8FAFC'},
+              ]}>
+              <Text style={[styles.statVal, {color: COLORS.primary}]}>Active</Text>
+              <Text style={[styles.statLabel, {color: colors.textLight}]}>Status</Text>
+            </View>
+            <View
+              style={[
+                styles.statBox,
+                {backgroundColor: theme.dark ? '#111827' : '#F8FAFC'},
+              ]}>
+              <Text style={[styles.statVal, {color: COLORS.secondary}]}>
+                {accountType === 'organization' ? 'Org' : 'Creator'}
+              </Text>
+              <Text style={[styles.statLabel, {color: colors.textLight}]}>Role</Text>
+            </View>
+            <View
+              style={[
+                styles.statBox,
+                {backgroundColor: theme.dark ? '#111827' : '#F8FAFC'},
+              ]}>
+              <Text style={[styles.statVal, {color: '#10B981'}]}>Cloud</Text>
+              <Text style={[styles.statLabel, {color: colors.textLight}]}>Backend</Text>
+            </View>
           </View>
         </View>
 
-        {/* User Welcome & Profile Card */}
+        {/* User Workspace Profile Card */}
         <View
           style={[
             styles.userCard,
@@ -110,32 +95,39 @@ const Home = ({navigation}: any) => {
             },
           ]}>
           <View style={styles.userAvatarRow}>
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>
-                {displayName.charAt(0).toUpperCase()}
-              </Text>
-            </View>
+            <ProfileAvatar
+              name={displayName}
+              profileImage={user?.avatar_url}
+              size={50}
+            />
+
             <View style={styles.userInfo}>
               <Text style={[styles.userName, {color: colors.title}]}>
-                Welcome, {displayName}!
+                {displayName}
               </Text>
               <Text style={[styles.userEmail, {color: colors.textLight}]}>
                 {user?.email || 'Logged In'}
               </Text>
             </View>
 
-            <View style={[styles.roleBadge, {backgroundColor: 'rgba(59, 91, 219, 0.12)'}]}>
-              <Text style={styles.roleBadgeText}>
-                {accountType === 'organization' ? 'Organization' : 'Creator'}
-              </Text>
-            </View>
+            <TouchableOpacity
+              style={styles.profileEditBtn}
+              onPress={() => navigation.navigate('Profile')}
+              activeOpacity={0.8}>
+              <FeatherIcon name="edit-2" size={14} color={COLORS.primary} />
+              <Text style={styles.profileEditBtnText}>Edit</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Account Details */}
           {organization && (
-            <View style={[styles.orgDetailBox, {backgroundColor: theme.dark ? '#182234' : '#F8FAFC'}]}>
+            <View
+              style={[
+                styles.orgDetailBox,
+                {backgroundColor: theme.dark ? '#182234' : '#F8FAFC'},
+              ]}>
               <View style={styles.detailRow}>
-                <FeatherIcon name="building" size={16} color={COLORS.primary} />
+                <FeatherIcon name="building" size={15} color={COLORS.primary} />
                 <Text style={[styles.detailLabel, {color: colors.textLight}]}>
                   Org:
                 </Text>
@@ -145,7 +137,7 @@ const Home = ({navigation}: any) => {
               </View>
               {organization.industry && (
                 <View style={styles.detailRow}>
-                  <FeatherIcon name="tag" size={16} color={COLORS.secondary} />
+                  <FeatherIcon name="tag" size={15} color={COLORS.secondary} />
                   <Text style={[styles.detailLabel, {color: colors.textLight}]}>
                     Industry:
                   </Text>
@@ -158,9 +150,13 @@ const Home = ({navigation}: any) => {
           )}
 
           {creator && (
-            <View style={[styles.orgDetailBox, {backgroundColor: theme.dark ? '#182234' : '#F8FAFC'}]}>
+            <View
+              style={[
+                styles.orgDetailBox,
+                {backgroundColor: theme.dark ? '#182234' : '#F8FAFC'},
+              ]}>
               <View style={styles.detailRow}>
-                <FeatherIcon name="video" size={16} color={COLORS.secondary} />
+                <FeatherIcon name="video" size={15} color={COLORS.secondary} />
                 <Text style={[styles.detailLabel, {color: colors.textLight}]}>
                   Niches:
                 </Text>
@@ -172,152 +168,225 @@ const Home = ({navigation}: any) => {
           )}
         </View>
 
-        {/* Onboarding Status / Shortcut */}
-        <View
-          style={[
-            styles.heroCard,
-            {
-              backgroundColor: colors.card,
-              borderColor: colors.borderColor,
-            },
-          ]}>
-          <View style={styles.badgeWrap}>
-            <View style={styles.badge}>
-              <FeatherIcon name="check-circle" size={14} color="#10B981" />
-              <Text style={styles.badgeText}>Auth & Onboarding Active</Text>
-            </View>
-          </View>
+        {/* Quick Hub Navigation Cards */}
+        <Text style={[styles.sectionHeading, {color: colors.title}]}>
+          Quick Access
+        </Text>
 
-          <Text style={[styles.heroHeading, {color: colors.title}]}>
-            Where creators and brands build together.
-          </Text>
-
-          <Text style={[styles.heroBody, {color: colors.textLight}]}>
-            Your mobile app is now connected to the Context Engine production backend. Complete user authentication and role onboarding are ready.
-          </Text>
-
-          {/* Action buttons */}
-          <View style={styles.actionButtonsCol}>
-            {/* Component catalog */}
-            <TouchableOpacity
-              style={styles.primaryActionBtn}
-              onPress={() => navigation.navigate('Components')}
-              activeOpacity={0.85}>
-              <FeatherIcon name="grid" size={18} color="#FFFFFF" />
-              <Text style={styles.primaryActionBtnText}>
-                Open UI Component Catalog
-              </Text>
-            </TouchableOpacity>
-
-            {/* Test Onboarding shortcut */}
-            <TouchableOpacity
+        <View style={styles.quickGrid}>
+          {/* Profile Card */}
+          <TouchableOpacity
+            style={[
+              styles.hubCard,
+              {backgroundColor: colors.card, borderColor: colors.borderColor},
+            ]}
+            onPress={() => navigation.navigate('Profile')}
+            activeOpacity={0.8}>
+            <View
               style={[
-                styles.secondaryActionBtn,
-                {borderColor: colors.borderColor, backgroundColor: colors.background},
-              ]}
-              onPress={() => navigation.navigate('ChooseAccountType')}
-              activeOpacity={0.85}>
-              <FeatherIcon name="refresh-cw" size={16} color={colors.title} />
-              <Text style={[styles.secondaryActionBtnText, {color: colors.title}]}>
-                Revisit Onboarding Flow
-              </Text>
-            </TouchableOpacity>
-          </View>
+                styles.hubIconWrap,
+                {backgroundColor: 'rgba(0, 105, 212, 0.1)'},
+              ]}>
+              <FeatherIcon name="user" size={20} color={COLORS.primary} />
+            </View>
+            <Text style={[styles.hubTitle, {color: colors.title}]}>
+              My Profile
+            </Text>
+            <Text style={[styles.hubDesc, {color: colors.textLight}]}>
+              View & edit personal details, organization branding, and invites
+            </Text>
+          </TouchableOpacity>
+
+          {/* Marketplace Card */}
+          <TouchableOpacity
+            style={[
+              styles.hubCard,
+              {backgroundColor: colors.card, borderColor: colors.borderColor},
+            ]}
+            onPress={() => navigation.navigate('Marketplace')}
+            activeOpacity={0.8}>
+            <View
+              style={[
+                styles.hubIconWrap,
+                {backgroundColor: 'rgba(0, 154, 134, 0.1)'},
+              ]}>
+              <FeatherIcon name="shopping-bag" size={20} color={COLORS.secondary} />
+            </View>
+            <Text style={[styles.hubTitle, {color: colors.title}]}>
+              Marketplace
+            </Text>
+            <Text style={[styles.hubDesc, {color: colors.textLight}]}>
+              Discover verified creators, talent niches, and collaboration offers
+            </Text>
+          </TouchableOpacity>
+
+          {/* Campaigns Card */}
+          <TouchableOpacity
+            style={[
+              styles.hubCard,
+              {backgroundColor: colors.card, borderColor: colors.borderColor},
+            ]}
+            onPress={() => navigation.navigate('Campaigns')}
+            activeOpacity={0.8}>
+            <View
+              style={[
+                styles.hubIconWrap,
+                {backgroundColor: 'rgba(225, 155, 52, 0.1)'},
+              ]}>
+              <FeatherIcon name="award" size={20} color="#E19B34" />
+            </View>
+            <Text style={[styles.hubTitle, {color: colors.title}]}>
+              Campaigns
+            </Text>
+            <Text style={[styles.hubDesc, {color: colors.textLight}]}>
+              Track brand briefs, deliverables, quotes, and active milestones
+            </Text>
+          </TouchableOpacity>
+
+          {/* UI Catalog Card */}
+          <TouchableOpacity
+            style={[
+              styles.hubCard,
+              {backgroundColor: colors.card, borderColor: colors.borderColor},
+            ]}
+            onPress={() => navigation.navigate('Components')}
+            activeOpacity={0.8}>
+            <View
+              style={[
+                styles.hubIconWrap,
+                {backgroundColor: 'rgba(124, 58, 237, 0.1)'},
+              ]}>
+              <FeatherIcon name="layers" size={20} color="#7C3AED" />
+            </View>
+            <Text style={[styles.hubTitle, {color: colors.title}]}>
+              UI Catalog
+            </Text>
+            <Text style={[styles.hubDesc, {color: colors.textLight}]}>
+              Explore native widgets, forms, bottom sheets, and charts
+            </Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        {/* Revisit Onboarding button */}
+        <TouchableOpacity
+          style={[
+            styles.revisitBtn,
+            {borderColor: colors.borderColor, backgroundColor: colors.card},
+          ]}
+          onPress={() => navigation.navigate('ChooseAccountType')}
+          activeOpacity={0.85}>
+          <FeatherIcon name="refresh-cw" size={15} color={colors.textLight} />
+          <Text style={[styles.revisitBtnText, {color: colors.title}]}>
+            Switch Account Type / Revisit Onboarding
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </DashboardLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
+  contentContainer: {
+    gap: 16,
+    paddingBottom: 24,
   },
-  scrollContainer: {
-    padding: SIZES.padding,
-    paddingTop: 24,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  brandTitle: {
-    ...FONTS.h2,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-  },
-  brandSubtitle: {
-    ...FONTS.fontSm,
-    marginTop: 2,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  iconBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  userCard: {
+  heroCard: {
     borderRadius: 20,
     borderWidth: 1,
     padding: 18,
-    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
   },
+  badgeWrap: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  heroHeading: {
+    fontSize: 20,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+    marginBottom: 8,
+    lineHeight: 26,
+  },
+  heroBody: {
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  statBox: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 12,
+  },
+  statVal: {
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  statLabel: {
+    fontSize: 10,
+    marginTop: 2,
+  },
+  userCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 16,
+  },
   userAvatarRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  avatarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 14,
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '800',
-  },
   userInfo: {
     flex: 1,
+    marginLeft: 14,
   },
   userName: {
     fontSize: 16,
     fontWeight: '700',
   },
   userEmail: {
-    fontSize: 13,
+    fontSize: 12,
     marginTop: 2,
   },
-  roleBadge: {
+  profileEditBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 105, 212, 0.1)',
   },
-  roleBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
+  profileEditBtnText: {
     color: COLORS.primary,
+    fontSize: 12,
+    fontWeight: '700',
   },
   orgDetailBox: {
     marginTop: 14,
-    padding: 12,
     borderRadius: 12,
+    padding: 12,
     gap: 8,
   },
   detailRow: {
@@ -326,84 +395,60 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   detailLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
   },
   detailValue: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     flex: 1,
   },
-  heroCard: {
-    borderRadius: 20,
+  sectionHeading: {
+    fontSize: 16,
+    fontWeight: '800',
+    marginTop: 4,
+    letterSpacing: -0.2,
+  },
+  quickGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  hubCard: {
+    width: '48%',
+    borderRadius: 16,
     borderWidth: 1,
-    padding: 24,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
-    elevation: 3,
+    padding: 14,
   },
-  badgeWrap: {
-    flexDirection: 'row',
-    marginBottom: 14,
-  },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 20,
-  },
-  badgeText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#10B981',
-  },
-  heroHeading: {
-    ...FONTS.h3,
-    fontWeight: '700',
-    lineHeight: 28,
-    marginBottom: 12,
-  },
-  heroBody: {
-    ...FONTS.font,
-    lineHeight: 22,
-    marginBottom: 20,
-  },
-  actionButtonsCol: {
-    gap: 10,
-  },
-  primaryActionBtn: {
-    backgroundColor: COLORS.primary,
-    flexDirection: 'row',
+  hubIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 14,
-    gap: 8,
+    marginBottom: 10,
   },
-  primaryActionBtnText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  secondaryActionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 14,
-    borderWidth: 1,
-    gap: 8,
-  },
-  secondaryActionBtnText: {
+  hubTitle: {
     fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  hubDesc: {
+    fontSize: 11,
+    lineHeight: 15,
+  },
+  revisitBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 4,
+  },
+  revisitBtnText: {
+    fontSize: 13,
     fontWeight: '600',
   },
 });

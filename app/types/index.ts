@@ -147,3 +147,39 @@ export interface ApiResponse<T = any> {
 }
 
 export type ThemePreference = 'system' | 'light' | 'dark';
+
+export interface AppNotification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  body: string;
+  payload_json: {
+    invite_id?: string;
+    organization_id?: string;
+    organization_name?: string;
+    inviter_name?: string;
+    approval_id?: string;
+    project_id?: string;
+    project_name?: string;
+    version_number?: number;
+    decision?: 'approved' | 'rejected';
+    rejection_reason?: string | null;
+    quote_id?: string;
+    campaign_id?: string;
+    campaign_title?: string;
+    creator_name?: string;
+    quote_amount?: number;
+    quote_currency?: string;
+  } | null;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface NotificationList {
+  items: AppNotification[];
+}
+
+export interface NotificationUnreadCount {
+  count: number;
+}

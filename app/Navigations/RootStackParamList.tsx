@@ -9,6 +9,13 @@ export type RootStackParamList = {
 
   // Main App
   Home: undefined;
+  Profile: undefined;
+  Marketplace: undefined;
+  Campaigns: undefined;
+  Portfolio: undefined;
+  BrandProfiles: undefined;
+  TeamProjects: undefined;
+  Approvals: undefined;
   Components: undefined;
 
   // Reusable Component Showcases

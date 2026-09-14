@@ -4,6 +4,8 @@ import {
   CreatorProfile,
   OrganizationProfile,
   OrganizationOnboardingPayload,
+  OrganizationUpdatePayload,
+  OrganizationMember,
   CreatorOnboardingPayload,
   TokenResponse,
   RegisterFormInputs,
@@ -200,6 +202,93 @@ export const authService = {
     } catch (err: any) {
       // 404 or empty is non-fatal
       return [];
+    }
+  },
+
+  /**
+   * Update authenticated user profile details (full_name, phone, bio, avatar_url)
+   */
+  async updateUserProfile(
+    userId: string,
+    data: Partial<UserProfile>,
+  ): Promise<UserProfile> {
+    try {
+      const response = await api.patch<UserProfile>(`/users/${userId}`, data);
+      return response.data;
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * Update current organization profile details
+   */
+  async updateOrganization(
+    data: OrganizationUpdatePayload,
+  ): Promise<OrganizationProfile> {
+    try {
+      const response = await api.patch<OrganizationProfile>(
+        '/organizations/me',
+        data,
+      );
+      return response.data;
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * List current organization's team members
+   */
+  async getOrganizationMembers(): Promise<OrganizationMember[]> {
+    try {
+      const response = await api.get<{members: OrganizationMember[]} | OrganizationMember[]>(
+        '/organizations/me/members',
+      );
+      if (Array.isArray(response.data)) {
+        return response.data;
+      }
+      return response.data?.members || [];
+    } catch (err: any) {
+      console.warn('[AuthService] Failed to load organization members:', err.message);
+      return [];
+    }
+  },
+
+  /**
+   * Remove a member from the organization
+   */
+  async removeOrganizationMember(userId: string): Promise<void> {
+    try {
+      await api.delete(`/organizations/me/members/${userId}`);
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
+    }
+  },
+
+  /**
+   * List sent pending organization invites
+   */
+  async getOrganizationInvites(): Promise<OrganizationInvite[]> {
+    try {
+      const response = await api.get<OrganizationInvite[]>(
+        '/organizations/me/invites',
+      );
+      return response.data || [];
+    } catch (err: any) {
+      console.warn('[AuthService] Failed to load invites:', err.message);
+      return [];
+    }
+  },
+
+  /**
+   * Cancel a pending organization invite
+   */
+  async cancelOrganizationInvite(inviteId: string): Promise<void> {
+    try {
+      await api.delete(`/organizations/me/invites/${inviteId}`);
+    } catch (err: any) {
+      throw new Error(formatApiError(err));
     }
   },
 

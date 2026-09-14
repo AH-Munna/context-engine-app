@@ -3,6 +3,7 @@ import {
   UserProfile,
   CreatorProfile,
   OrganizationProfile,
+  OrganizationUpdatePayload,
   AccountType,
 } from '../../types';
 import {authService} from '../../Service/authService';
@@ -97,6 +98,39 @@ export const restoreSessionThunk = createAsyncThunk(
       return rejectWithValue(err.message || 'Session expired');
     }
   }
+);
+
+/**
+ * Update user profile and refresh Redux state
+ */
+export const updateUserProfileThunk = createAsyncThunk(
+  'app/updateUserProfile',
+  async (
+    {userId, data}: {userId: string; data: Partial<UserProfile>},
+    {rejectWithValue},
+  ) => {
+    try {
+      const updated = await authService.updateUserProfile(userId, data);
+      return updated;
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to update profile');
+    }
+  },
+);
+
+/**
+ * Update organization profile and refresh Redux state
+ */
+export const updateOrganizationThunk = createAsyncThunk(
+  'app/updateOrganization',
+  async (data: OrganizationUpdatePayload, {rejectWithValue}) => {
+    try {
+      const updated = await authService.updateOrganization(data);
+      return updated;
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to update organization');
+    }
+  },
 );
 
 export const appSlice = createSlice({
@@ -203,6 +237,12 @@ export const appSlice = createSlice({
         state.isAuthenticated = false;
         state.isOnboarded = false;
         state.user = null;
+      })
+      .addCase(updateUserProfileThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(updateOrganizationThunk.fulfilled, (state, action) => {
+        state.organization = action.payload;
       });
   },
 });

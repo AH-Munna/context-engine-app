@@ -18,6 +18,13 @@ import OrganizationOnboardingScreen from '../Screens/Onboarding/OrganizationOnbo
 
 // Main application screens
 import HomeScreen from '../Screens/Home';
+import ProfileScreen from '../Screens/Profile/ProfileScreen';
+import MarketplaceScreen from '../Screens/Pages/MarketplaceScreen';
+import CampaignsScreen from '../Screens/Pages/CampaignsScreen';
+import PortfolioScreen from '../Screens/Pages/PortfolioScreen';
+import BrandProfilesScreen from '../Screens/Pages/BrandProfilesScreen';
+import TeamProjectsScreen from '../Screens/Pages/TeamProjectsScreen';
+import ApprovalsScreen from '../Screens/Pages/ApprovalsScreen';
 import ComponentsScreen from '../Screens/components';
 
 // Component showcase screens
@@ -112,6 +119,13 @@ const StackNavigator = () => {
 
         {/* Main Application Screen */}
         <Stack.Screen name={'Home'} component={HomeScreen} />
+        <Stack.Screen name={'Profile'} component={ProfileScreen} />
+        <Stack.Screen name={'Marketplace'} component={MarketplaceScreen} />
+        <Stack.Screen name={'Campaigns'} component={CampaignsScreen} />
+        <Stack.Screen name={'Portfolio'} component={PortfolioScreen} />
+        <Stack.Screen name={'BrandProfiles'} component={BrandProfilesScreen} />
+        <Stack.Screen name={'TeamProjects'} component={TeamProjectsScreen} />
+        <Stack.Screen name={'Approvals'} component={ApprovalsScreen} />
 
         {/* UI Component Catalog */}
         <Stack.Screen name={'Components'} component={ComponentsScreen} />
