@@ -59,10 +59,10 @@ const ForgotPasswordScreen = () => {
         {/* Back Button Bar */}
         <View style={styles.topBar}>
           <TouchableOpacity
-            style={[styles.backBtn, {backgroundColor: colors.card, borderColor: colors.borderColor}]}
+            style={[styles.backBtn, {backgroundColor: colors.card, borderColor: colors.border || colors.borderColor}]}
             onPress={() => navigation.goBack()}
             activeOpacity={0.8}>
-            <FeatherIcon name="arrow-left" size={20} color={colors.title} />
+            <FeatherIcon name="arrow-left" size={18} color={colors.title} />
           </TouchableOpacity>
         </View>
 
@@ -72,8 +72,8 @@ const ForgotPasswordScreen = () => {
           keyboardShouldPersistTaps="handled">
           
           <View style={styles.headerBlock}>
-            <View style={[styles.iconWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
-              <FeatherIcon name="key" size={28} color={COLORS.primary} />
+            <View style={[styles.iconWrap, {backgroundColor: theme.dark ? colors.card : COLORS.primaryLight}]}>
+              <FeatherIcon name="key" size={26} color={COLORS.primary} />
             </View>
             <Text style={[styles.title, {color: colors.title}]}>Reset Password</Text>
             <Text style={[styles.subtitle, {color: colors.textLight}]}>
@@ -89,7 +89,7 @@ const ForgotPasswordScreen = () => {
           )}
 
           {submitted ? (
-            <View style={[styles.successCard, {backgroundColor: colors.card, borderColor: colors.borderColor}]}>
+            <View style={[styles.successCard, {backgroundColor: colors.card, borderColor: colors.border || colors.borderColor}]}>
               <View style={styles.successIcon}>
                 <FeatherIcon name="check-circle" size={32} color="#10B981" />
               </View>
@@ -100,7 +100,7 @@ const ForgotPasswordScreen = () => {
               <TouchableOpacity
                 style={[styles.primaryBtn, {backgroundColor: COLORS.primary}]}
                 onPress={() => navigation.navigate('Login')}
-                activeOpacity={0.85}>
+                activeOpacity={0.88}>
                 <Text style={styles.primaryBtnText}>Return to Sign In</Text>
               </TouchableOpacity>
             </View>
@@ -113,12 +113,6 @@ const ForgotPasswordScreen = () => {
                     styles.inputContainer,
                     {backgroundColor: colors.card, borderColor: colors.borderColor},
                   ]}>
-                  <FeatherIcon
-                    name="mail"
-                    size={18}
-                    color={colors.textLight}
-                    style={styles.inputIcon}
-                  />
                   <TextInput
                     style={[styles.input, {color: colors.title}]}
                     placeholder="you@company.com"
@@ -141,7 +135,7 @@ const ForgotPasswordScreen = () => {
                 ]}
                 onPress={handleSubmit}
                 disabled={loading}
-                activeOpacity={0.85}>
+                activeOpacity={0.88}>
                 {loading ? (
                   <ActivityIndicator color="#FFFFFF" size="small" />
                 ) : (
@@ -167,47 +161,46 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topBar: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingHorizontal: 24,
+    paddingTop: 12,
   },
   backBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 24,
     paddingBottom: 40,
     justifyContent: 'center',
   },
   headerBlock: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 24,
   },
   iconWrap: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
   },
   title: {
-    ...FONTS.h3,
-    fontWeight: '800',
-    letterSpacing: -0.5,
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 26,
+    letterSpacing: -0.4,
     marginBottom: 8,
   },
   subtitle: {
     ...FONTS.font,
-    textAlign: 'center',
-    lineHeight: 20,
-    maxWidth: 300,
+    lineHeight: 21,
+    maxWidth: 320,
   },
   errorBanner: {
     flexDirection: 'row',
@@ -215,38 +208,35 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
     borderWidth: 1,
     borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 12,
-    marginBottom: 20,
+    marginBottom: 18,
     gap: 10,
   },
   errorText: {
+    ...FONTS.fontSm,
     color: '#EF4444',
-    fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     flex: 1,
   },
   form: {
     width: '100%',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 18,
   },
   label: {
     ...FONTS.fontSm,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderRadius: 14,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     height: 50,
-  },
-  inputIcon: {
-    marginRight: 10,
   },
   input: {
     flex: 1,
@@ -260,21 +250,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 52,
     borderRadius: 14,
-    gap: 8,
+    gap: 10,
     shadowColor: COLORS.primary,
     shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
     elevation: 4,
   },
   primaryBtnText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '800',
   },
   successCard: {
-    borderWidth: 1,
-    borderRadius: 20,
+    borderWidth: 1.5,
+    borderRadius: 16,
     padding: 24,
     alignItems: 'center',
   },
@@ -282,8 +272,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   successTitle: {
-    ...FONTS.h4,
-    fontWeight: '700',
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 20,
+    letterSpacing: -0.3,
     marginBottom: 8,
   },
   successBody: {

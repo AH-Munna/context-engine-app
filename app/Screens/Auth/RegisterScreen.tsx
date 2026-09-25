@@ -141,37 +141,29 @@ const RegisterScreen = () => {
           keyboardShouldPersistTaps="handled">
           
           {/* Header */}
-          <View style={styles.headerBlock}>
-            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
-              <Image source={IMAGES.logo} style={styles.logoImage} resizeMode="contain" />
-            </View>
-            <Text style={[styles.title, {color: colors.title}]}>Create Account</Text>
-            <Text style={[styles.subtitle, {color: colors.textLight}]}>
-              Join Context Engine to analyze videos, track scores, and collaborate.
-            </Text>
-          </View>
+          <Text style={[styles.title, {color: colors.title}]}>Create Account</Text>
+          <Text style={[styles.subtitle, {color: colors.textLight}]}>
+            Join Context Engine to analyze videos, track scores, and collaborate.
+          </Text>
 
-          {/* Account Type Selector */}
-          <View style={styles.accountTypeSelector}>
+          {/* Account Type Segmented Selector */}
+          <View style={[styles.segmentedContainer, {borderColor: colors.border || colors.borderColor}]}>
             <TouchableOpacity
               style={[
-                styles.accountTypeOption,
-                accountType === 'creator' && [
-                  styles.accountTypeOptionActive,
-                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : COLORS.primaryLight},
-                ],
+                styles.segmentTab,
+                accountType === 'creator' && {backgroundColor: COLORS.primary},
               ]}
               onPress={() => setAccountType('creator')}
-              activeOpacity={0.8}>
+              activeOpacity={0.85}>
               <FeatherIcon
                 name="video"
-                size={18}
-                color={accountType === 'creator' ? COLORS.primary : colors.textLight}
+                size={16}
+                color={accountType === 'creator' ? '#FFFFFF' : colors.textLight}
               />
               <Text
                 style={[
-                  styles.accountTypeText,
-                  {color: accountType === 'creator' ? COLORS.primary : colors.title},
+                  styles.segmentTabText,
+                  {color: accountType === 'creator' ? '#FFFFFF' : colors.title},
                 ]}>
                 Creator
               </Text>
@@ -179,23 +171,22 @@ const RegisterScreen = () => {
 
             <TouchableOpacity
               style={[
-                styles.accountTypeOption,
-                accountType === 'organization' && [
-                  styles.accountTypeOptionActive,
-                  {borderColor: COLORS.primary, backgroundColor: theme.dark ? '#1E293B' : COLORS.primaryLight},
-                ],
+                styles.segmentTab,
+                styles.segmentTabRight,
+                {borderLeftColor: colors.border || colors.borderColor},
+                accountType === 'organization' && {backgroundColor: COLORS.primary},
               ]}
               onPress={() => setAccountType('organization')}
-              activeOpacity={0.8}>
+              activeOpacity={0.85}>
               <FeatherIcon
                 name="briefcase"
-                size={18}
-                color={accountType === 'organization' ? COLORS.primary : colors.textLight}
+                size={16}
+                color={accountType === 'organization' ? '#FFFFFF' : colors.textLight}
               />
               <Text
                 style={[
-                  styles.accountTypeText,
-                  {color: accountType === 'organization' ? COLORS.primary : colors.title},
+                  styles.segmentTabText,
+                  {color: accountType === 'organization' ? '#FFFFFF' : colors.title},
                 ]}>
                 Organization
               </Text>
@@ -215,7 +206,7 @@ const RegisterScreen = () => {
             {accountType === 'creator' ? (
               <View style={styles.nameRow}>
                 {/* First Name */}
-                <View style={[styles.inputGroup, {flex: 1, marginRight: 8}]}>
+                <View style={[styles.inputGroup, {flex: 1}]}>
                   <Text style={[styles.label, {color: colors.title}]}>First Name</Text>
                   <View
                     style={[
@@ -234,7 +225,7 @@ const RegisterScreen = () => {
                 </View>
 
                 {/* Last Name */}
-                <View style={[styles.inputGroup, {flex: 1, marginLeft: 8}]}>
+                <View style={[styles.inputGroup, {flex: 1}]}>
                   <Text style={[styles.label, {color: colors.title}]}>Last Name</Text>
                   <View
                     style={[
@@ -261,12 +252,6 @@ const RegisterScreen = () => {
                     styles.inputContainer,
                     {backgroundColor: colors.card, borderColor: colors.borderColor},
                   ]}>
-                  <FeatherIcon
-                    name="building"
-                    size={18}
-                    color={colors.textLight}
-                    style={styles.inputIcon}
-                  />
                   <TextInput
                     style={[styles.input, {color: colors.title}]}
                     placeholder="Acme Studios, Brand Co…"
@@ -287,12 +272,6 @@ const RegisterScreen = () => {
                   styles.inputContainer,
                   {backgroundColor: colors.card, borderColor: colors.borderColor},
                 ]}>
-                <FeatherIcon
-                  name="mail"
-                  size={18}
-                  color={colors.textLight}
-                  style={styles.inputIcon}
-                />
                 <TextInput
                   style={[styles.input, {color: colors.title}]}
                   placeholder="you@company.com"
@@ -315,15 +294,9 @@ const RegisterScreen = () => {
                   styles.inputContainer,
                   {backgroundColor: colors.card, borderColor: colors.borderColor},
                 ]}>
-                <FeatherIcon
-                  name="lock"
-                  size={18}
-                  color={colors.textLight}
-                  style={styles.inputIcon}
-                />
                 <TextInput
                   style={[styles.input, {color: colors.title}]}
-                  placeholder="Create password"
+                  placeholder="Your password"
                   placeholderTextColor={colors.textLight}
                   secureTextEntry={!showPassword}
                   value={password}
@@ -351,21 +324,25 @@ const RegisterScreen = () => {
                   styles.inputContainer,
                   {backgroundColor: colors.card, borderColor: colors.borderColor},
                 ]}>
-                <FeatherIcon
-                  name="check-circle"
-                  size={18}
-                  color={colors.textLight}
-                  style={styles.inputIcon}
-                />
                 <TextInput
                   style={[styles.input, {color: colors.title}]}
-                  placeholder="Re-enter password"
+                  placeholder="Confirm password"
                   placeholderTextColor={colors.textLight}
                   secureTextEntry={!showPassword}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   editable={!loading}
                 />
+                <TouchableOpacity
+                  style={styles.eyeBtn}
+                  onPress={() => setShowPassword(!showPassword)}
+                  activeOpacity={0.7}>
+                  <FeatherIcon
+                    name={showPassword ? 'eye-off' : 'eye'}
+                    size={18}
+                    color={colors.textLight}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -378,7 +355,7 @@ const RegisterScreen = () => {
               ]}
               onPress={handleRegister}
               disabled={loading}
-              activeOpacity={0.85}>
+              activeOpacity={0.88}>
               {loading ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
               ) : (
@@ -417,59 +394,44 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingTop: 48,
     paddingBottom: 40,
     justifyContent: 'center',
   },
-  headerBlock: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  logoWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    padding: 8,
-  },
-  logoImage: {
-    width: '100%',
-    height: '100%',
-  },
   title: {
-    ...FONTS.h3,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-    marginBottom: 6,
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 26,
+    letterSpacing: -0.4,
+    marginBottom: 8,
   },
   subtitle: {
-    ...FONTS.fontSm,
-    textAlign: 'center',
-    lineHeight: 18,
-    maxWidth: 290,
+    ...FONTS.font,
+    lineHeight: 21,
+    marginBottom: 20,
+    maxWidth: 320,
   },
-  accountTypeSelector: {
+  segmentedContainer: {
     flexDirection: 'row',
-    gap: 12,
+    borderWidth: 1.5,
+    borderRadius: 14,
+    overflow: 'hidden',
     marginBottom: 20,
   },
-  accountTypeOption: {
+  segmentTab: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 6,
     paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: 'transparent',
+    paddingHorizontal: 8,
   },
-  accountTypeOptionActive: {},
-  accountTypeText: {
-    fontSize: 14,
-    fontWeight: '700',
+  segmentTabRight: {
+    borderLeftWidth: 1.5,
+  },
+  segmentTabText: {
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 13,
   },
   errorBanner: {
     flexDirection: 'row',
@@ -477,15 +439,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
     borderWidth: 1,
     borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 12,
     marginBottom: 16,
     gap: 10,
   },
   errorText: {
+    ...FONTS.fontSm,
     color: '#EF4444',
-    fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     flex: 1,
   },
   form: {
@@ -493,29 +455,27 @@ const styles = StyleSheet.create({
   },
   nameRow: {
     flexDirection: 'row',
+    gap: 12,
   },
   inputGroup: {
     marginBottom: 14,
   },
   label: {
-    ...FONTS.fontXs,
+    ...FONTS.fontSm,
     fontWeight: '700',
     marginBottom: 6,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 48,
-  },
-  inputIcon: {
-    marginRight: 8,
+    borderWidth: 1.5,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    height: 50,
   },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
     paddingVertical: 0,
   },
@@ -526,32 +486,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
+    height: 52,
     borderRadius: 14,
     marginTop: 10,
-    gap: 8,
+    gap: 10,
     shadowColor: COLORS.primary,
     shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
     elevation: 4,
   },
   primaryBtnText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '800',
   },
   footerRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: 20,
   },
   footerText: {
-    fontSize: 14,
+    fontSize: 13,
   },
   signupLinkText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: COLORS.primary,
   },

@@ -125,16 +125,24 @@ const LoginScreen = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           
-          {/* Brand Logo & Header */}
-          <View style={styles.headerBlock}>
-            <View style={[styles.logoWrap, {backgroundColor: theme.dark ? '#182234' : COLORS.primaryLight}]}>
-              <Image source={IMAGES.logo} style={styles.logoImage} resizeMode="contain" />
+          {/* Brand Logo & Name Header */}
+          <View style={styles.brandRow}>
+            <View style={[styles.brandBadge, {backgroundColor: COLORS.primary}]}>
+              <FeatherIcon name="layers" size={18} color="#FFFFFF" />
             </View>
-            <Text style={[styles.title, {color: colors.title}]}>Sign In</Text>
-            <Text style={[styles.subtitle, {color: colors.textLight}]}>
-              Access your Context Engine projects, video intelligence, and collaborations.
+            <Text style={[styles.brandTitle, {color: colors.title}]}>
+              Context <Text style={{color: COLORS.primary}}>Engine</Text>
             </Text>
           </View>
+
+          {/* Heading & Subtitle */}
+          <Text style={[styles.title, {color: colors.title}]}>Sign In</Text>
+          <Text style={[styles.subtitle, {color: colors.textLight}]}>
+            Access your Context Engine projects, video intelligence, and collaborations.
+          </Text>
+
+          {/* Section Divider */}
+          <View style={[styles.divider, {backgroundColor: colors.border || colors.borderColor}]} />
 
           {/* Error Banner */}
           {errorMessage && (
@@ -157,12 +165,6 @@ const LoginScreen = () => {
                     borderColor: colors.borderColor,
                   },
                 ]}>
-                <FeatherIcon
-                  name="mail"
-                  size={18}
-                  color={colors.textLight}
-                  style={styles.inputIcon}
-                />
                 <TextInput
                   style={[styles.input, {color: colors.title}]}
                   placeholder="you@company.com"
@@ -198,12 +200,6 @@ const LoginScreen = () => {
                     borderColor: colors.borderColor,
                   },
                 ]}>
-                <FeatherIcon
-                  name="lock"
-                  size={18}
-                  color={colors.textLight}
-                  style={styles.inputIcon}
-                />
                 <TextInput
                   style={[styles.input, {color: colors.title}]}
                   placeholder="Your password"
@@ -238,7 +234,7 @@ const LoginScreen = () => {
               ]}
               onPress={handleLogin}
               disabled={loading}
-              activeOpacity={0.85}>
+              activeOpacity={0.88}>
               {loading ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
               ) : (
@@ -249,6 +245,9 @@ const LoginScreen = () => {
               )}
             </TouchableOpacity>
           </View>
+
+          {/* Section Divider */}
+          <View style={[styles.divider, {backgroundColor: colors.border || colors.borderColor, marginVertical: 22}]} />
 
           {/* Footer Register Link */}
           <View style={styles.footerRow}>
@@ -277,38 +276,44 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 48,
     paddingBottom: 40,
     justifyContent: 'center',
   },
-  headerBlock: {
+  brandRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 28,
+    marginBottom: 32,
+    gap: 10,
   },
-  logoWrap: {
-    width: 68,
-    height: 68,
-    borderRadius: 20,
+  brandBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
-    padding: 10,
   },
-  logoImage: {
-    width: '100%',
-    height: '100%',
+  brandTitle: {
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 17,
+    letterSpacing: -0.3,
   },
   title: {
-    ...FONTS.h2,
-    fontWeight: '800',
-    letterSpacing: -0.5,
+    ...FONTS.fontNunitoExtraBold,
+    fontSize: 26,
+    letterSpacing: -0.4,
     marginBottom: 8,
   },
   subtitle: {
     ...FONTS.font,
-    textAlign: 'center',
-    lineHeight: 20,
-    maxWidth: 300,
+    lineHeight: 21,
+    marginBottom: 20,
+    maxWidth: 320,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    marginBottom: 20,
   },
   errorBanner: {
     flexDirection: 'row',
@@ -316,48 +321,46 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
     borderWidth: 1,
     borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 12,
-    marginBottom: 20,
+    marginBottom: 18,
     gap: 10,
   },
   errorText: {
+    ...FONTS.fontSm,
     color: '#EF4444',
-    fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     flex: 1,
   },
   form: {
     width: '100%',
   },
   inputGroup: {
-    marginBottom: 18,
+    marginBottom: 16,
   },
   label: {
     ...FONTS.fontSm,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   passwordLabelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 6,
   },
   forgotPasswordText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
     color: COLORS.primary,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderRadius: 14,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     height: 50,
-  },
-  inputIcon: {
-    marginRight: 10,
   },
   input: {
     flex: 1,
@@ -375,29 +378,27 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 14,
     marginTop: 8,
-    gap: 8,
+    gap: 10,
     shadowColor: COLORS.primary,
     shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
     elevation: 4,
   },
   primaryBtnText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '800',
   },
   footerRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 32,
   },
   footerText: {
-    fontSize: 14,
+    fontSize: 13,
   },
   signupLinkText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: COLORS.primary,
   },

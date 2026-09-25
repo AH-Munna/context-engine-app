@@ -134,10 +134,10 @@ export function getNeomorphCardStyle(
 /** Flat surface shadow — shared by SoftShadow, NeomorphCard, tabs, inputs */
 export function getSurfaceShadowStyle(isDark: boolean): SoftShadowOptions {
   return {
-    shadowColor: isDark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.06)',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: isDark ? 0.08 : 0.08,
-    shadowRadius: 3,
+    shadowColor: isDark ? 'rgba(0,0,0,0.35)' : 'rgba(43,38,64,0.08)',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: isDark ? 0.20 : 0.08,
+    shadowRadius: 6,
   };
 }
 
@@ -168,11 +168,11 @@ export function getButtonShadowStyle(
     };
   }
   return {
-    shadowColor: COLORS.coral,
-    shadowOffset: {width: 4, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    borderRadius: SIZES.radius_md,
+    shadowColor: COLORS.primary,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.24,
+    shadowRadius: 10,
+    borderRadius: SIZES.radius,
   };
 }
 

@@ -85,3 +85,6 @@ android/app/src/main/assets/index.android.bundle
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+/.docs
+.docs
